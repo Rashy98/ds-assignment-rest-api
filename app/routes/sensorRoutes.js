@@ -57,6 +57,21 @@ module.exports = function(app) {
         });
     });
 
+    app.put('/api/sensors/admin', function (req, res) {
+        let sensor_id = req.body.Id;
+        let floorNo = req.body.floorNo;
+        let roomNo = req.body.roomNo;
+        let status = req.body.status;
+
+        if (!sensor_id || !floorNo || !roomNo || !status) {
+            return res.status(400).send({ message: 'Please provide sensor details and sensor id' });
+        }
+        dbConn.query("UPDATE Sensors SET floorNo = ? ,roomNo = ? ,status =? WHERE id = ?", [floorNo,roomNo,status, sensor_id], function (error, results, fields) {
+            if (error) throw error;
+            return res.send({ error: false, data: results, message: 'sensor has been updated successfully.' });
+        });
+    });
+
     app.delete('/api/sensors', function (req, res) {
         let sensor_id = req.body.Id;
 
@@ -70,3 +85,4 @@ module.exports = function(app) {
     });
 
 }
+
